@@ -1,11 +1,9 @@
-
 #include "Arduino.h"
 #include <usb_serial.h>
 #include <HardwareSerial.h>
 
 class StateMachineClass
-{
-public:
+{public:
 
   int bar;
   

@@ -4,7 +4,6 @@
 //Custom Robot Libaries
 #include "weaponObjectMachine.h" 
 
-
 extern char* __brkval;
 
 unsigned int freeRam() {
@@ -12,7 +11,6 @@ unsigned int freeRam() {
 
     return &tos - __brkval;
 }
-
 
 const int DebugLevel=0;
 #ifdef WillsBoard
@@ -46,12 +44,9 @@ void setup() {
 	
 }
 
-
 int ValidPPMdata=-1;
 int valRadio1,valRadio2,valRadio3,valRadio4;
 int switch1,switch2,switch3,switch4,switch5;
-
-
 
 int pot1;
 
@@ -93,11 +88,8 @@ void twoSwitchesFromChan(int chanel,int &switchA,int &switchB) {
 
 }
 
-
 unsigned int flashstate1=0;
 unsigned int flashstate2=0;
-
-
 
 void loop() {
   
@@ -177,6 +169,4 @@ void loop() {
 	
   	
 }
-
-
 

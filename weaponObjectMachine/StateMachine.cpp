@@ -4,56 +4,49 @@
 
 //Value Stuff
 const int numberOfValues=6;
-// ValveAPin = 3;  // chamber fill port (NC)
-// ValveBPin = 4;  // main pilot exhaust (NC)
-// ValveCPin = 5;  // buffer fill (NO)
-// ValveDPin = 6;  // buffer exhaust(NC)
-// ValveEPin = 9;  // chamber exhaust(NC)
-// ValveA2Pin = 3; // high flow chamber fill port (NO)
 
 #ifdef WillsBoard
 	/* wills pin out */
 	/* set line 17 in arduino-1.8.2/hardware/teensy/avr/platform.txt to recipe.cpp.o.pattern="{compiler.path}{build.toolchain}{build.command.g++}" -c {build.flags.optimize} {build.flags.common} {build.flags.dep} {build.flags.cpp} {build.flags.cpu} {build.flags.defs} -DARDUINO={runtime.ide.version} -DF_CPU={build.fcpu} -D{build.usbtype} -DLAYOUT_{build.keylayout} -DWillsBoard {includes} "{source_file}" -o "{object_file} "*/
 	const int ValvePins[numberOfValues] = {
-	/*Valve A*/  23,
-	/*Valve B*/  22,
-	/*Valve C*/  21,
-	/*Valve D*/  5,
-	/*Valve E*/  6,
-	/*Valve A2*/  37,
-	// /*Aux1 */    36
-	// /*Aux1 */    38
+	/*Valve A*/  23,        // chamber fill port (NC)
+	/*Valve B*/  22,        // main pilot exhaust (NC)
+	/*Valve C*/  21,        // buffer fill (NO)
+	/*Valve D*/  5,         // buffer exhaust(NC)
+	/*Valve E*/  6,         // chamber exhaust(NC)
+	/*Valve A2*/ 37,        // high flow chamber fill port (NO)
+	// /*Aux1 */ 36
+	// /*Aux1 */ 38
 	};
 #else 
+
 	/* Doug's pinout*/
 	const int ValvePins[numberOfValues] = {
-	/*Valve A*/  14,  //4
-	/*Valve B*/  15, //5
-	/*Valve C*/  6,
-	/*Valve D*/  7,
-	/*Valve E*/  8,
-	/*Valve A2*/ 9,
+	/*Valve A*/  4,         // chamber fill port (NC)
+	/*Valve B*/  15, //5    // main pilot exhaust (NC)
+	/*Valve C*/  6,         // buffer fill (NO)
+	/*Valve D*/  7,         // buffer exhaust(NC)
+	/*Valve E*/  8,         // chamber exhaust(NC)
+	/*Valve A2*/ 14, //9    // high flow chamber fill port (NO)
 	};
 #endif
 
 const int reversvalue [numberOfValues] = { 
-/*Valve A*/  0,
-/*Valve B*/  0,
-/*Valve C*/  1,
-/*Valve D*/  0,
-/*Valve E*/  0,
-/*Valve A2*/ 1,
-
+/*Valve A*/  0,           // chamber fill port (NC)
+/*Valve B*/  0,           // main pilot exhaust (NC)
+/*Valve C*/  1,           // buffer fill (NO)
+/*Valve D*/  0,           // buffer exhaust(NC)
+/*Valve E*/  0,           // chamber exhaust(NC)
+/*Valve A2*/ 1,           // high flow chamber fill port (NO)
 };
 
-
 const int servopin[numberOfValues] = { 
-/*Valve A*/  1,
-/*Valve B*/  1,
-/*Valve C*/  0,
-/*Valve D*/  0,
-/*Valve E*/  0,
-/*Valve A2*/ 0,
+/*Valve A*/  0,           // chamber fill port (NC)
+/*Valve B*/  1,           // main pilot exhaust (NC)
+/*Valve C*/  0,           // buffer fill (NO)
+/*Valve D*/  0,           // buffer exhaust(NC)
+/*Valve E*/  0,           // chamber exhaust(NC)
+/*Valve A2*/ 1,           // high flow chamber fill port (NO)
 
 };
 
@@ -90,7 +83,6 @@ const int ValueState[numberofStates][numberOfValues] = {
 /* 8 -- Fired */
 {0, 1, 0, 0, 1, 0},
 };
-
 
 const char *StateNames[numberofStates] = { "Safe State", "Retract/fill Buffer", "Expand Buffer","Rest","Arming","Ready to Fire","Waiting to Fire","Fire","Fired"}; 
 
@@ -130,8 +122,6 @@ const int StateAutoTransitionTimes[numberofStates] = {
 /* Fired */                 10000,
 };
 
-
-
 const int AutoTransitionTo[numberofStates] = { 
 /* 0 - Safe State */		      -1, 
 /* 1 - Retract/fill Buffer */	 2, 
@@ -144,20 +134,16 @@ const int AutoTransitionTo[numberofStates] = {
 /* 8 - Fired */			           1,
 };
 
-
-
 //State Machine
-
 int StateMachineClass::defaultStateTimeOutFunction(int input){
 //printer->println("I'm StateMachineClass::defaultStateTimeOutFunction");
-	//StateMinTimes[currentState]+StateLeadinTimes[currentState]
+//StateMinTimes[currentState]+StateLeadinTimes[currentState]
 	unsigned long currentTime = micros();
 	
 	
 	if (	TransitionStartMicros + StateLeadinTimes[currentState] + StateMinTimes[currentState] + StateAutoTransitionTimes[currentState] < currentTime ){
 		return 0;// past auto transition
-	
-	} else if (		TransitionStartMicros + StateLeadinTimes[currentState] + StateMinTimes[currentState] < currentTime ){
+		} else if (		TransitionStartMicros + StateLeadinTimes[currentState] + StateMinTimes[currentState] < currentTime ){
 		return 1; // past min
 	} else {
 		return -1;// in transion, do not change
@@ -165,6 +151,7 @@ int StateMachineClass::defaultStateTimeOutFunction(int input){
 }
 
 typedef int (StateMachineClass::*IntFunctionWithOneParameter) (int a);
+
 const IntFunctionWithOneParameter ContinueState [numberofStates] = { 
 /* 0 -- Safe State */	&StateMachineClass::defaultStateTimeOutFunction,
 /* 1 -- Retract P */	&StateMachineClass::defaultStateTimeOutFunction,
@@ -176,22 +163,12 @@ const IntFunctionWithOneParameter ContinueState [numberofStates] = {
 /* 7 -- Fire */		    &StateMachineClass::defaultStateTimeOutFunction,
 /* 8 -- Fired */	    &StateMachineClass::defaultStateTimeOutFunction,
 };
-
-
-
-/*
-StateMachineClass::StateMachineClass( usb_serial_class &print ) { 
-      printer = &print; //operate on the address of print
-      
-}  
-*/
-
+/*StateMachineClass::StateMachineClass( usb_serial_class &print ) { 
+      printer = &print; //operate on the address of print}*/  
 StateMachineClass::StateMachineClass( usb_serial_class &print,HardwareSerial &print2 ) { 
       printer = &print; //operate on the address of print
 printerHW = &print2;
-      
 }
-
 void StateMachineClass::EnableStateMachine( ) { 
   
   	
@@ -199,10 +176,9 @@ void StateMachineClass::EnableStateMachine( ) {
 		//digitalWrite(ValvePins[valveII],ValueState[NewState][valveII]);
 		if (servopin[valveII] == 0 ){
 			pinMode(ValvePins[valveII],OUTPUT);
-/*			servopin is const array so we never need to do this.
- *      if (servoObj[valveII]){
- *				servoObj[valveII]->detach();
- *			}*/
+        //servopin is const array so we never need to do this.
+        //if (servoObj[valveII]){servoObj[valveII]->detach();}
+        
 	 	}else{
 			if (servoObj[valveII]){
 			    servoObj[valveII]->attach(ValvePins[valveII]);
@@ -218,8 +194,7 @@ void StateMachineClass::EnableStateMachine( ) {
 //	}
 	
 }  
-/*
-void StateMachineClass::debugFunction(void ){
+/*void StateMachineClass::debugFunction(void ){
 
 	printer->print("StateMachineClass::debugFunction");
 	printer->print("<TelemPacket>");
@@ -330,7 +305,6 @@ void StateMachineClass::debugFunction(void ){
 	
 	//}
 }
-
 void StateMachineClass::debugFunction(HardwareSerial MySerial ){
 
 	MySerial.print("StateMachineClass::debugFunction");
@@ -362,8 +336,6 @@ void StateMachineClass::debugFunction(HardwareSerial MySerial ){
 
 	MySerial.println("</ TelemPacket>");
 }
-
-
 float readPressureSensor(int pin){
 
 	int val = analogRead(2);
@@ -436,16 +408,12 @@ void StateMachineClass::tickFunction(void ){
 		}
 	}
 }
-
-
 void StateMachineClass::externalRequest( int NewState ) { 
 	if (NewState==0){
 		setMachineState ( NewState );
 	}else{
 		// this is worth considering, maybe via some kind of merge of updateSwitches
-	}
-}
-
+	}}
 void StateMachineClass::setMachineState( int NewState ) { 
  	 int PinVal;
   
@@ -477,9 +445,6 @@ void StateMachineClass::setMachineState( int NewState ) {
 	
 	
 }  
-
-
-
 void StateMachineClass::updateSwitches(int switch1, int switch2, int switch3, int switch4, int switch5){
 	//printer->println("StateMachineClass");
 	
