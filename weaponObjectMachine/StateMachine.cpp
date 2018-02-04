@@ -22,13 +22,13 @@ const int numberOfValues=6;
 
 	/* Doug's pinout*/
 	const int ValvePins[numberOfValues] = {
-	/*Valve A*/  4,         // chamber fill port (NC)
-	/*Valve B*/  15, //5    // main pilot exhaust (NC)
-	/*Valve C*/  6,         // buffer fill (NO)
-	/*Valve D*/  7,         // buffer exhaust(NC)
-	/*Valve E*/  8,         // chamber exhaust(NC)
-	/*Valve A2*/ 14, //9    // high flow chamber fill port (NO)
-	};
+	/*Valve A*/  4,         // chamber fill port (NC)             - solenoid pin 4  - servo pin N/A
+	/*Valve B*/  15,        // main pilot exhaust (NC)            - solenoid pin 5  - servo pin 15
+	/*Valve C*/  6,         // buffer fill (NO)                   - solenoid pin 6  - servo pin 13
+	/*Valve D*/  7,         // buffer exhaust(NC)                 - solenoid pin 7  - servo pin 12 
+	/*Valve E*/  8,         // chamber exhaust(NC)                - solenoid pin 8  - servo pin N/A
+	/*Valve A2*/ 14,        // high flow chamber fill port (NO)   - solenoid pin 9  - servo pin 14
+  };
 #endif
 
 const int reversvalue [numberOfValues] = { 
@@ -52,20 +52,20 @@ const boolean servopin[numberOfValues] = {
 
 const int ServoStart [numberOfValues] = { 
 /*Valve A*/  0,
-/*Valve B*/  0,
-/*Valve C*/  210,
+/*Valve B*/  200,         // main pilot exhaust (NC)
+/*Valve C*/  0,
 /*Valve D*/  0,
 /*Valve E*/  0,
-/*Valve A2*/ 210,
+/*Valve A2*/ 190,         // high flow chamber fill port (NO)
 };
 
 const int ServoEnd [numberOfValues] = { 
 /*Valve A*/  0,
-/*Valve B*/  0,
-/*Valve C*/  140,
+/*Valve B*/  120,         // main pilot exhaust (NC)
+/*Valve C*/  0,
 /*Valve D*/  0,
 /*Valve E*/  0,
-/*Valve A2*/ 140,
+/*Valve A2*/ 98,          // high flow chamber fill port (NO)
 };
 
 
@@ -119,14 +119,14 @@ const int StateLeadinTimes[numberofStates] = {
 
 const int StateMinTimes[numberofStates] = { 
 /* Safe State */            10000, 
-/* Retract/fill Buffer */  400000, // 0.4seconds
-/* Retract wait */         800000, // 0.8 seconds of expansion
+/* Retract/fill Buffer */  200000, // 0.2sec of buffer fill
+/* Retract wait */         800000, // 0.8sec of expansion
 /* Rest */                  10000, 
 /* Arming */                10000, 
 /* Ready to Fire */         10000,
 /* Waiting to Fire */       10000,
-/* Fire */                 800000, // waits 0.8 sec before venting chamber after firing?
-/* Fired */               1000000, // 1s venting duration
+/* Fire */                 100000, // waits 0.1sec before venting chamber after firing
+/* Fired */               1000000, // 1.0sec venting duration
 };
 
 const int StateAutoTransitionTimes[numberofStates] = { 
@@ -134,7 +134,7 @@ const int StateAutoTransitionTimes[numberofStates] = {
 /* Retract/fill Buffer */   10000, 
 /* Retract wait */          10000, 
 /* Rest */                  10000, 
-/* Arming */              2000000, // 2 seconds fill
+/* Arming */              1700000, // 1.7 seconds fill
 /* Ready to Fire */         10000, // 0.01 seconds
 /* Waiting to Fire */       10000,
 /* Fire */                  10000,
