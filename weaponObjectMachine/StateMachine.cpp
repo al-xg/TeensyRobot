@@ -52,7 +52,7 @@ const boolean servopin[numberOfValues] = {
 
 const int ServoStart [numberOfValues] = { 
 /*Valve A*/  0,
-/*Valve B*/  200,         // main pilot exhaust (NC)
+/*Valve B*/  155,         // main pilot exhaust (NC)
 /*Valve C*/  0,
 /*Valve D*/  0,
 /*Valve E*/  0,
@@ -61,11 +61,11 @@ const int ServoStart [numberOfValues] = {
 
 const int ServoEnd [numberOfValues] = { 
 /*Valve A*/  0,
-/*Valve B*/  120,         // main pilot exhaust (NC)
+/*Valve B*/  80,         // main pilot exhaust (NC)
 /*Valve C*/  0,
 /*Valve D*/  0,
 /*Valve E*/  0,
-/*Valve A2*/ 98,          // high flow chamber fill port (NO)
+/*Valve A2*/ 95,          // high flow chamber fill port (NO)
 };
 
 
