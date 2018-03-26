@@ -42,30 +42,30 @@ const int reversvalue [numberOfValues] = {
 
 const boolean servopin[numberOfValues] = { 
 /*Valve A*/  0,           // chamber fill port (NC)
-/*Valve B*/  1,           // main pilot exhaust (NC)
+/*Valve B*/  1,           // main pilot exhaust (NC)          -- 0deg=800 90deg=1600 max=2200
 /*Valve C*/  0,           // buffer fill (NO)
 /*Valve D*/  0,           // buffer exhaust(NC)
 /*Valve E*/  0,           // chamber exhaust(NC)
-/*Valve A2*/ 1,           // high flow chamber fill port (NO)
+/*Valve A2*/ 1,           // high flow chamber fill port (NO) -- 0deg=500 90deg=1450 max=2400
 
 };
 
 const int ServoStart [numberOfValues] = { 
 /*Valve A*/  0,
-/*Valve B*/  155,         // main pilot exhaust (NC)
+/*Valve B*/  500,         // main pilot exhaust (NC) -- valve open
 /*Valve C*/  0,
 /*Valve D*/  0,
 /*Valve E*/  0,
-/*Valve A2*/ 190,         // high flow chamber fill port (NO)
+/*Valve A2*/ 800,         // high flow chamber fill port (NO) --valve closed
 };
 
 const int ServoEnd [numberOfValues] = { 
 /*Valve A*/  0,
-/*Valve B*/  80,         // main pilot exhaust (NC)
+/*Valve B*/  1450,         // main pilot exhaust (NC) -- valve closed
 /*Valve C*/  0,
 /*Valve D*/  0,
 /*Valve E*/  0,
-/*Valve A2*/ 95,          // high flow chamber fill port (NO)
+/*Valve A2*/ 1600,          // high flow chamber fill port (NO) -- valve open
 };
 
 
@@ -446,7 +446,7 @@ void StateMachineClass::setMachineState( int NewState ) {
 		if (servopin[valveII] == 0 ){
 			digitalWrite(ValvePins[valveII],PinVal);
 		}else{
-			servoObj[valveII]->write(ServoStart[valveII]*( !PinVal )+ ServoEnd[valveII]*( PinVal ));
+			servoObj[valveII]->writeMicroseconds(ServoStart[valveII]*( !PinVal )+ ServoEnd[valveII]*( PinVal ));
 		}
 	}
 	
