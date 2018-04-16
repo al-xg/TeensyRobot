@@ -42,7 +42,7 @@ const int reversvalue [numberOfValues] = {
 
 const boolean servopin[numberOfValues] = { 
 /*Valve A*/  0,           // chamber fill port (NC)
-/*Valve B*/  1,           // main pilot exhaust (NC)          -- 0deg=800 90deg=1600 max=2200
+/*Valve B*/  2,           // main pilot exhaust (NC)          -- 0deg=800 90deg=1600 max=2200
 /*Valve C*/  0,           // buffer fill (NO)
 /*Valve D*/  0,           // buffer exhaust(NC)
 /*Valve E*/  0,           // chamber exhaust(NC)
@@ -61,7 +61,7 @@ const int ServoStart [numberOfValues] = {
 
 const int ServoEnd [numberOfValues] = { 
 /*Valve A*/  0,
-/*Valve B*/  1600,         // main pilot exhaust (NC) -- valve closed
+/*Valve B*/  1550,         // main pilot exhaust (NC) -- valve closed
 /*Valve C*/  0,
 /*Valve D*/  0,
 /*Valve E*/  0,
@@ -126,7 +126,7 @@ const int StateMinTimes[numberofStates] = {
 /* Ready to Fire */         10000,
 /* Waiting to Fire */       10000,
 /* Fire */                 100000, // waits 0.1sec before venting chamber after firing
-/* Fired */               1000000, // 1.0sec venting duration
+/* Fired */               1200000, // 1.2sec venting duration
 };
 
 const int StateAutoTransitionTimes[numberofStates] = { 
@@ -134,7 +134,7 @@ const int StateAutoTransitionTimes[numberofStates] = {
 /* Retract/fill Buffer */   10000, 
 /* Retract wait */          10000, 
 /* Rest */                  10000, 
-/* Arming */              1700000, // 1.7 seconds fill
+/* Arming */              2000000, // 2.0 seconds fill
 /* Ready to Fire */         10000, // 0.01 seconds
 /* Waiting to Fire */       10000,
 /* Fire */                  10000,
@@ -444,9 +444,12 @@ void StateMachineClass::setMachineState( int NewState ) {
 			if (PinVal==1) {PinVal=0;}else{PinVal=1;}
 		}
 		if (servopin[valveII] == 0 ){
-			digitalWrite(ValvePins[valveII],PinVal);
+		  digitalWrite(ValvePins[valveII],PinVal);
+		  }else if (servopin[valveII] == 2 ){
+		    digitalWrite(ValvePins[valveII],PinVal);
+		    servoObj[valveII]->writeMicroseconds(ServoStart[valveII]*( !PinVal )+ ServoEnd[valveII]*( PinVal ));
 		}else{
-			servoObj[valveII]->writeMicroseconds(ServoStart[valveII]*( !PinVal )+ ServoEnd[valveII]*( PinVal ));
+		    servoObj[valveII]->writeMicroseconds(ServoStart[valveII]*( !PinVal )+ ServoEnd[valveII]*( PinVal ));
 		}
 	}
 	
